@@ -1,0 +1,28 @@
+class Solution:
+    def removeInvalidParentheses(self, s):
+        ans = []
+
+        def dfs(s, start, last, p1, p2):
+            bal = 0
+
+            for i in range(start, len(s)):
+                if s[i] == p1:
+                    bal += 1
+                elif s[i] == p2:
+                    bal -= 1
+
+                if bal < 0:
+                    for j in range(last, i + 1):
+                        if s[j] == p2 and (j == last or s[j - 1] != p2):
+                            dfs(s[:j] + s[j + 1:], i, j, p1, p2)
+                    return
+
+            rev = s[::-1]
+
+            if p1 == '(':
+                dfs(rev, 0, 0, ')', '(')
+            else:
+                ans.append(rev)
+
+        dfs(s, 0, 0, '(', ')')
+        return ans
